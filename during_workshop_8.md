@@ -6,7 +6,7 @@
 Add a dockerfile to the app so that you can build and run it using Docker.
 
 Hints:
-- If you are seeing a Node Sass error, try including a `.dockerignore` file to avoid copying build artefacts/dependencies into the image
+- If you are seeing a Node Sass error, try adding the `DotnetTemplate.Web/node_modules` folder to a `.dockerignore` file to avoid copying build artefacts/dependencies into the image.
 
 ### Publish manually to Docker Hub
 1. Create a personal free account on [Docker Hub](https://hub.docker.com/).
