@@ -1,18 +1,16 @@
-FROM python:3.7.9-slim-buster as base
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS base 
 
-ENV PATH /usr/local/bin:$PATH
-ENV VIRTUAL_ENV "/venv"
-RUN python -m venv $VIRTUAL_ENV
-ENV PATH "$VIRTUAL_ENV/bin:$PATH"
-WORKDIR /app
-RUN pip install poetry
+RUN apt-get update \  
+&& apt-get install curl gnupg -yq \  
+&& curl -sL https://deb.nodesource.com/setup_10.x | bash \ 
+&& apt-get install nodejs -yq 
+
+COPY . . 
+
+RUN dotnet build 
+WORKDIR /DotnetTemplate.Web
+RUN npm install
+RUN npm run build
+
 EXPOSE 5000
-COPY poetry.lock pyproject.toml /app/
-RUN poetry install --no-root
-COPY . /app
-
-FROM base as production
-ENTRYPOINT poetry run gunicorn -w 4 -b 0.0.0.0:5000 run:app
-
-FROM base as development
-ENTRYPOINT poetry run flask run --host=0.0.0.0
+CMD dotnet run
